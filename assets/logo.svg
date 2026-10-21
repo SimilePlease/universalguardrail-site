@@ -1,0 +1,23 @@
+<svg width="450" height="80" viewBox="0 0 450 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Dynamic Network Orb -->
+  <defs>
+    <radialGradient id="nodeGlow" cx="40" cy="40" r="35" gradientUnits="userSpaceOnUse">
+      <stop offset="0.2" stop-color="#2563EB" stop-opacity="0.2"/>
+      <stop offset="1" stop-color="#2563EB" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  
+  <g transform="translate(0, 0)">
+    <!-- Shield Orb Component -->
+    <circle cx="40" cy="40" r="38" fill="url(#nodeGlow)"/>
+    <path d="M40 18 L64 26 L64 45 C64 58 40 70 40 70 C40 70 16 58 16 45 L16 26 L40 18Z" fill="#111827" stroke="#60A5FA" stroke-width="2"/>
+    <path d="M40 28 L40 60 M28 44 L52 44" stroke="#2563EB" stroke-width="1.5" stroke-opacity="0.6"/>
+    
+    <!-- Geodesic overlay -->
+    <path d="M40 5 L68 15 L78 40 L68 65 L40 75 L12 65 L2 40 L12 15 Z" stroke="#2563EB" stroke-width="0.5" stroke-opacity="0.4"/>
+    <path d="M40 5 L40 75 M2 40 L78 40 M12 15 L68 65 M68 15 L12 65" stroke="#2563EB" stroke-width="0.5" stroke-opacity="0.2"/>
+  </g>
+  
+  <!-- Single-Line Corporate Typography -->
+  <text x="95" y="52" fill="#111827" style="font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif; font-weight: 800; font-size: 32px; letter-spacing: -0.04em; text-transform: uppercase;">UNIVERSAL GUARDRAIL</text>
+</svg>

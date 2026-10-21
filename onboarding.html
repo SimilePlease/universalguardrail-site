@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setup Wizard | Universal Guardrail</title>
+    <meta name="description"
+        content="Configure your Universal Guardrail deployment. Define security rails, connect LLMs, and generate your guard_config.yaml.">
+
+    <!-- SEO -->
+    <link rel="canonical" href="https://universalguardrail.io/onboarding.html">
+    <meta property="og:title" content="Setup Wizard | Universal Guardrail">
+    <meta property="og:description"
+        content="Interactive configuration guide for Universal Guardrail security middleware.">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
+    </script>
+
+    <link rel="icon" type="image/png" href="assets/favicon_v7_final.png">
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" sizes="16x16 32x32 48x48">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        brand: '#2563EB',
+                        brandDark: '#1D4ED8',
+                        ink: '#111827',
+                        muted: '#6B7280',
+                        border: '#E5E7EB',
+                        surface: '#F9FAFB',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            -webkit-font-smoothing: antialiased;
+            letter-spacing: -0.01em;
+        }
+
+        .step-card {
+            animation: fadeSlideIn 0.35s ease forwards;
+        }
+
+        @keyframes fadeSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-track {
+            position: absolute;
+            inset: 0;
+            cursor: pointer;
+            background: #D1D5DB;
+            border-radius: 24px;
+            transition: background 0.2s;
+        }
+
+        .toggle-switch input:checked+.toggle-track {
+            background: #2563EB;
+        }
+
+        .toggle-thumb {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 18px;
+            height: 18px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.2s;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .toggle-switch input:checked~.toggle-track .toggle-thumb {
+            transform: translateX(20px);
+        }
+
+        .step-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #E5E7EB;
+            transition: all 0.2s;
+        }
+
+        .step-dot.active {
+            background: #2563EB;
+            transform: scale(1.3);
+        }
+
+        .step-dot.done {
+            background: #2563EB;
+        }
+
+        .code-preview {
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            font-size: 0.72rem;
+            line-height: 1.6;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        select,
+        input[type="text"],
+        input[type="password"],
+        input[type="url"] {
+            outline: none;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+
+        select:focus,
+        input:focus {
+            border-color: #2563EB !important;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+        }
+
+        .btn-primary {
+            background: #2563EB;
+            color: white;
+            font-weight: 600;
+            padding: 0.625rem 1.5rem;
+            border-radius: 999px;
+            transition: all 0.15s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background: #1D4ED8;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: #6B7280;
+            font-weight: 500;
+            padding: 0.625rem 1.5rem;
+            border-radius: 999px;
+            border: 1.5px solid #E5E7EB;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .btn-ghost:hover {
+            border-color: #9CA3AF;
+            color: #374151;
+        }
+
+        .license-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body class="bg-surface min-h-screen flex flex-col">
+
+    <!-- Nav -->
+    <nav class="bg-white border-b border-border h-14 flex items-center px-6 shrink-0">
+        <a class="block h-20 flex items-center" href="index.html" >
+            <img src="assets/logo_v7_final.svg" alt="Universal Guardrail" style="height:48px;width:auto;"></a>
+        <span class="ml-4 text-sm font-semibold text-muted border-l border-border pl-4">Setup Wizard</span>
+    </nav>
+
+    <!-- Main -->
+    <main class="flex-1 flex flex-col items-center justify-center px-4 py-12">
+
+        <!-- Progress -->
+        <div class="flex items-center gap-3 mb-10" id="step-dots">
+            <div class="step-dot active" id="dot-0"></div>
+            <div class="step-dot" id="dot-1"></div>
+            <div class="w-8 h-px bg-border"></div>
+            <div class="step-dot" id="dot-2"></div>
+            <div class="w-8 h-px bg-border"></div>
+            <div class="step-dot" id="dot-3"></div>
+            <div class="w-8 h-px bg-border"></div>
+            <div class="step-dot" id="dot-4"></div>
+            <div class="w-8 h-px bg-border"></div>
+            <div class="step-dot" id="dot-5"></div>
+        </div>
+
+        <div class="w-full max-w-xl">
+
+            <!-- ─── Step 0: Create Your Account ─── -->
+            <div class="step-card bg-white rounded-2xl border border-border shadow-sm p-8" id="step-0">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-xl">🚀</div>
+                    <div>
+                        <p class="text-xs font-semibold text-muted uppercase tracking-wider">Step 1 of 6</p>
+                        <h1 class="text-xl font-bold text-ink">Create Your Account</h1>
+                    </div>
+                </div>
+
+                <p class="text-sm text-muted mb-6">Register to start your <strong>10-day free trial</strong> — a real
+                    license key, all rails available, no card required.</p>
+
+                <div class="space-y-4 max-w-md">
+                    <div>
+                        <label class="text-xs font-semibold text-muted uppercase tracking-wider">Work Email</label>
+                        <input id="signup-email" type="email" placeholder="you@company.com"
+                            class="w-full mt-1 px-4 py-2.5 rounded-xl border border-border focus:ring-2 focus:ring-accentBlue outline-none">
+                    </div>
+                    <div>
+                        <label class="text-xs font-semibold text-muted uppercase tracking-wider">Password</label>
+                        <input id="signup-password" type="password" placeholder="At least 8 characters"
+                            class="w-full mt-1 px-4 py-2.5 rounded-xl border border-border focus:ring-2 focus:ring-accentBlue outline-none">
+                    </div>
+                    <p id="signup-error" class="text-sm text-red-500 hidden"></p>
+                </div>
+
+                <div class="mt-8 flex justify-end">
+                    <button class="btn-primary" id="signup-btn"
+                        onclick="signupThenContinue()">Create Account &amp; Get Trial Key →</button>
+                </div>
+            </div>
+
+            <!-- ─── Step 1: Project Info ─── -->
+            <div class="step-card bg-white rounded-2xl border border-border shadow-sm p-8 hidden" id="step-1">
+                <div id="trial-banner" class="hidden mb-6 rounded-xl border border-green-200 bg-green-50 p-4">
+                    <p class="text-sm font-semibold text-green-700 mb-1">✓ Trial key issued — <span id="trial-days">10</span> days</p>
+                    <code id="trial-key-box" class="text-xs font-mono break-all text-ink"></code>
+                    <p id="trial-note" class="text-xs text-muted mt-1"></p>
+                </div>
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-xl">🏢</div>
+                    <div>
+                        <p class="text-xs font-semibold text-muted uppercase tracking-wider">Step 2 of 6</p>
+                        <h1 class="text-xl font-bold text-ink">Project Setup</h1>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-ink mb-1.5" for="project-name">Project
+                            Name</label>
+                        <input id="project-name" type="text" placeholder="e.g. AcmeCorp AI Assistant"
+                            class="w-full px-4 py-2.5 rounded-xl border border-border text-sm bg-white text-ink"
+                            value="My Guardrail Project">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-ink mb-1.5" for="deployment-mode">Deployment
+                            Mode</label>
+                        <select id="deployment-mode"
+                            class="w-full px-4 py-2.5 rounded-xl border border-border text-sm bg-white text-ink">
+                            <option value="active">Active (block threats)</option>
+                            <option value="monitor">Monitor (log only, don't block)</option>
+                            <option value="shadow">Shadow (silent audit mode)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-ink mb-1.5" for="industry">Industry</label>
+                        <select id="industry"
+                            class="w-full px-4 py-2.5 rounded-xl border border-border text-sm bg-white text-ink">
+                            <option value="finance">Finance / FinTech</option>
+                            <option value="healthcare">Healthcare / HealthTech</option>
+                            <option value="legal">Legal Tech</option>
+                            <option value="hr">HR / People Tech</option>
+                            <option value="manufacturing">Manufacturing</option>
+                            <option value="telecom">Telecom</option>
+                            <option value="public">Public Sector</option>
+                            <option value="general">General / SaaS</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mt-8 flex justify-between">
+                    <button class="btn-ghost" onclick="goTo(0)">← Back</button>
+                    <button class="btn-primary" onclick="goTo(2)">Next: Configure Rails →</button>
+                </div>
+            </div>
+
+            <!-- ─── Step 2: Rails Configuration ─── -->
+            <div class="step-card bg-white rounded-2xl border border-border shadow-sm p-8 hidden" id="step-2">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-xl">🛡️</div>
+                    <div>
+                        <p class="text-xs font-semibold text-muted uppercase tracking-wider">Step 3 of 6</p>
+                        <h1 class="text-xl font-bold text-ink">Security Rails</h1>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <!-- Toggle row helper builds each row -->
+                    <div id="rails-toggles"></div>
+                </div>
+
+                <div class="mt-8 flex justify-between">
+                    <button class="btn-ghost" onclick="goTo(1)">← Back</button>
+                    <button class="btn-primary" onclick="goTo(3)">Next: LLM Connection →</button>
+                </div>
+            </div>
+
+            <!-- ─── Step 3: LLM Connection ─── -->
+            <div class="step-card bg-white rounded-2xl border border-border shadow-sm p-8 hidden" id="step-3">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center text-xl">🤖</div>
+                    <div>
+                        <p class="text-xs font-semibold text-muted uppercase tracking-wider">Step 4 of 6</p>
+                        <h1 class="text-xl font-bold text-ink">LLM Connection</h1>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-ink mb-1.5">LLM Provider</label>
+                        <select id="llm-type" onchange="updateLLMFields()"
+                            class="w-full px-4 py-2.5 rounded-xl border border-border text-sm bg-white text-ink">
+                            <option value="mock">Mock (local dev / demo)</option>
+                            <option value="openai">OpenAI (GPT-4o, GPT-4-turbo)</option>
+                            <option value="anthropic">Anthropic (Claude 3.5 Sonnet)</option>
+                            <option value="ollama">Ollama (local, self-hosted)</option>
+                            <option value="openai_compatible">OpenAI-Compatible (Groq, Together.ai, vLLM)</option>
+                        </select>
+                    </div>
+                    <div id="llm-model-group">
+                        <label class="block text-sm font-semibold text-ink mb-1.5">Model Name</label>
+                        <input id="llm-model" type="text" placeholder="e.g. gpt-4o-mini"
+                            class="w-full px-4 py-2.5 rounded-xl border border-border text-sm bg-white text-ink"
+                            value="gpt-4o-mini">
+                    </div>
+                    <div id="llm-url-group" class="hidden">
+                        <label class="block text-sm font-semibold text-ink mb-1.5">API Base URL</label>
+                        <input id="llm-url" type="url" placeholder="http://localhost:11434"
+                            class="w-full px-4 py-2.5 rounded-xl border border-border text-sm bg-white text-ink">
+                    </div>
+                    <div id="llm-key-group" class="hidden">
+                        <label class="block text-sm font-semibold text-ink mb-1.5">API Key Env Var</label>
+                        <input id="llm-env-var" type="text" placeholder="OPENAI_API_KEY"
+                            class="w-full px-4 py-2.5 rounded-xl border border-border text-sm bg-white text-ink"
+                            value="OPENAI_API_KEY">
+                        <p class="text-xs text-muted mt-1.5">The environment variable name where your key is stored.
+                            Never hardcode keys in config.</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-ink mb-1.5">System Prompt</label>
+                        <textarea id="llm-system-prompt" rows="3"
+                            class="w-full px-4 py-2.5 rounded-xl border border-border text-sm bg-white text-ink resize-none focus:outline-none focus:border-brand"
+                            style="transition: border-color 0.15s, box-shadow 0.15s;"
+                            onfocus="this.style.boxShadow='0 0 0 3px rgba(37,99,235,0.12)'; this.style.borderColor='#2563EB'"
+                            onblur="this.style.boxShadow=''; this.style.borderColor=''">You are a helpful AI assistant compliant with all safety guidelines.</textarea>
+                    </div>
+                </div>
+
+                <div class="mt-8 flex justify-between">
+                    <button class="btn-ghost" onclick="goTo(2)">← Back</button>
+                    <button class="btn-primary" onclick="goTo(4)">Next: License Key →</button>
+                </div>
+            </div>
+
+            <!-- ─── Step 4: License Key ─── -->
+            <div class="step-card bg-white rounded-2xl border border-border shadow-sm p-8 hidden" id="step-4">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center text-xl">🔑</div>
+                    <div>
+                        <p class="text-xs font-semibold text-muted uppercase tracking-wider">Step 5 of 6</p>
+                        <h1 class="text-xl font-bold text-ink">License Key</h1>
+                    </div>
+                </div>
+
+                <p class="text-sm text-muted mb-4">Paste your <code
+                        class="bg-gray-100 px-1.5 py-0.5 rounded font-mono text-xs">GUARDRAIL-</code> license key below
+                    to unlock your plan's features.</p>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-ink mb-1.5">License Key</label>
+                        <input id="license-key" type="password" placeholder="GUARDRAIL-eyJ..."
+                            class="w-full px-4 py-2.5 rounded-xl border border-border text-sm bg-white text-ink font-mono"
+                            oninput="validateLicenseKey(this.value)">
+                        <div id="license-status" class="mt-2 h-5"></div>
+                    </div>
+
+                    <div id="license-info" class="hidden rounded-xl border border-blue-200 bg-blue-50 p-4 space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm font-semibold text-ink">Plan</span>
+                            <span id="lic-tier" class="license-badge bg-blue-100 text-blue-800">—</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-muted">Team Seats</span>
+                            <span id="lic-seats" class="text-sm font-semibold text-ink">—</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-muted">AI Apps Protected</span>
+                            <span id="lic-apps" class="text-sm font-semibold text-ink">—</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-muted">Expires</span>
+                            <span id="lic-expires" class="text-sm font-semibold text-ink">—</span>
+                        </div>
+                    </div>
+
+                    <p class="text-xs text-muted">Don't have a key? <a href="purchase.html"
+                            class="text-brand underline">Get one instantly</a>, or skip to use a plain API key via
+                        <code class="bg-gray-100 px-1 rounded font-mono">GUARDRAIL_API_KEYS</code> env var.</p>
+                </div>
+
+                <div class="mt-8 flex justify-between">
+                    <button class="btn-ghost" onclick="goTo(3)">← Back</button>
+                    <button class="btn-primary" onclick="goTo(5)">Next: Generate Config →</button>
+                </div>
+            </div>
+
+            <!-- ─── Step 5: Download Config ─── -->
+            <div class="step-card bg-white rounded-2xl border border-border shadow-sm p-8 hidden" id="step-5">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center text-xl">✅</div>
+                    <div>
+                        <p class="text-xs font-semibold text-muted uppercase tracking-wider">Step 6 of 6</p>
+                        <h1 class="text-xl font-bold text-ink">Generated Config</h1>
+                    </div>
+                </div>
+
+                <p class="text-sm text-muted mb-4">Your <code
+                        class="bg-gray-100 px-1.5 py-0.5 rounded font-mono text-xs">guard_config.yaml</code> is ready.
+                    Download it and place it in your project root.</p>
+
+                <div class="bg-ink rounded-xl p-4 mb-4 overflow-auto max-h-80">
+                    <pre id="yaml-preview" class="code-preview text-emerald-400"></pre>
+                </div>
+
+                <div class="flex gap-3">
+                    <button onclick="downloadConfig()" class="btn-primary flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                        Download guard_config.yaml
+                    </button>
+                    <button onclick="copyConfig()" class="btn-ghost flex items-center gap-2" id="copy-btn">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                        </svg>
+                        Copy
+                    </button>
+                </div>
+
+                <div class="mt-6 rounded-xl border border-border p-4 bg-surface text-sm space-y-2">
+                    <p class="font-semibold text-ink mb-1">Next steps:</p>
+                    <p class="text-muted">1. Place <code
+                            class="bg-gray-100 px-1 rounded text-xs font-mono">guard_config.yaml</code> in your project
+                        root</p>
+                    <p class="text-muted">2. Set <code
+                            class="bg-gray-100 px-1 rounded text-xs font-mono">GUARDRAIL_API_KEYS=your-license-key</code>
+                        in your environment</p>
+                    <p class="text-muted">3. Run <code
+                            class="bg-gray-100 px-1 rounded text-xs font-mono">uvicorn api:app --host 0.0.0.0 --port 8000</code>
+                    </p>
+                    <p class="text-muted">4. Or use Docker: <code
+                            class="bg-gray-100 px-1 rounded text-xs font-mono">docker compose up</code></p>
+                </div>
+
+                <div id="upgrade-panel" class="mt-6 rounded-xl border border-amber-200 bg-amber-50 p-4">
+                    <p class="text-sm font-semibold text-ink mb-1">Your trial key expires in <span
+                            id="trial-days-note">10</span> days.</p>
+                    <p class="text-xs text-muted mb-3">Pick a plan when you're ready — <strong>the same key is
+                            activated</strong>, nothing to reconfigure.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+                        <button onclick="activate('starter')" class="btn-ghost text-xs leading-tight py-2">Starter<br><span
+                                class="text-muted">5 seats · 3 apps</span></button>
+                        <button onclick="activate('pro')" class="btn-ghost text-xs leading-tight py-2">Pro<br><span
+                                class="text-muted">25 seats · 15 apps</span></button>
+                        <button onclick="activate('enterprise')" class="btn-ghost text-xs leading-tight py-2">Enterprise<br><span
+                                class="text-muted">200 seats · 50 apps</span></button>
+                    </div>
+                    <p id="upgrade-status" class="text-sm text-muted mt-2"></p>
+                </div>
+
+                <div class="mt-8 flex justify-between">
+                    <button class="btn-ghost" onclick="goTo(4)">← Back</button>
+                    <a href="index.html" class="btn-primary inline-block text-center no-underline">Done — Back to
+                        Home</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // ─── State ───────────────────────────────────────────────────────────────
+        const rails = [
+            { id: 'jailbreak', label: 'Jailbreak Detection', desc: 'Blocks DAN, system overrides', default: true },
+            { id: 'pii', label: 'PII Redaction', desc: 'Redacts email, phone, SSN, cards', default: true },
+            { id: 'semantic', label: 'Semantic Similarity', desc: 'Vector-based topic blocking', default: true },
+            { id: 'secrets', label: 'Secret/API Key Detection', desc: 'Blocks leaked API keys in inputs', default: true },
+            { id: 'malcode', label: 'Malicious Code Block', desc: 'Reverse shells, SQLi, XSS patterns', default: true },
+            { id: 'content', label: 'Content Policy', desc: 'Financial and medical advice filters', default: true },
+            { id: 'nsfw', label: 'NSFW Image Guard', desc: 'Pixel analysis for adult content', default: false },
+            { id: 'hallucination', label: 'Hallucination Check', desc: 'Semantic consistency on outputs', default: false },
+            { id: 'obfuscation', label: 'Obfuscation Detection', desc: 'Detects Base64, Hex payloads', default: true },
+            { id: 'rateLimit', label: 'Rate Limiting', desc: '50 req/min per IP', default: true },
+        ];
+
+        const state = {
+            step: 0,
+            rails: Object.fromEntries(rails.map(r => [r.id, r.default])),
+            licensePayload: null,
+            token: null,
+            trialKey: null,
+        };
+
+        // ─── Step Navigation ─────────────────────────────────────────────────────
+        function goTo(n) {
+            document.getElementById(`step-${state.step}`).classList.add('hidden');
+            document.getElementById(`dot-${state.step}`).classList.remove('active');
+            document.getElementById(`dot-${state.step}`).classList.add('done');
+
+            state.step = n;
+            const newStep = document.getElementById(`step-${n}`);
+            newStep.classList.remove('hidden');
+            // Re-trigger animation
+            newStep.classList.remove('step-card');
+            void newStep.offsetWidth;
+            newStep.classList.add('step-card');
+
+            document.getElementById(`dot-${n}`).classList.add('active');
+            document.getElementById(`dot-${n}`).classList.remove('done');
+
+            if (n === 5) renderYAML();
+            if (n === 4) prefillTrial();
+        }
+
+        // ─── Registration (Step 0) ───────────────────────────────────────────────
+        async function signupThenContinue() {
+            const btn = document.getElementById('signup-btn');
+            const err = document.getElementById('signup-error');
+            err.classList.add('hidden');
+            const email = document.getElementById('signup-email').value.trim();
+            const password = document.getElementById('signup-password').value;
+            if (!email || password.length < 8) {
+                err.textContent = 'Enter a work email and a password of at least 8 characters.';
+                err.classList.remove('hidden'); return;
+            }
+            btn.disabled = true; btn.textContent = 'Creating account…';
+            try {
+                const res = await fetch('/api/auth/signup', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const body = await res.json();
+                if (!res.ok) throw new Error(body.detail || 'Signup failed');
+                state.token = body.access_token;
+                state.trialKey = body.trial_key;
+                document.getElementById('trial-days').textContent = body.trial_days;
+                document.getElementById('trial-days-note').textContent = body.trial_days;
+                document.getElementById('trial-key-box').textContent = body.trial_key;
+                document.getElementById('trial-note').textContent = body.emailed
+                    ? `We also emailed it to ${email}.`
+                    : `Delivery is in dev mode — the key is also in logs/outbound_email.log.`;
+                document.getElementById('trial-banner').classList.remove('hidden');
+                goTo(1);
+            } catch (e) {
+                err.textContent = e.message; err.classList.remove('hidden');
+            } finally {
+                btn.disabled = false; btn.textContent = 'Create Account & Get Trial Key →';
+            }
+        }
+
+        function prefillTrial() {
+            const input = document.getElementById('license-key');
+            if (state.trialKey && !input.value) {
+                input.value = state.trialKey;
+                validateLicenseKey(state.trialKey);
+            }
+        }
+
+        // ─── Upgrade (Step 6) ────────────────────────────────────────────────────
+        async function activate(plan) {
+            const el = document.getElementById('upgrade-status');
+            el.className = 'text-sm text-muted mt-2';
+            el.textContent = `Activating ${plan}…`;
+            try {
+                const res = await fetch('/api/license/activate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${state.token}` },
+                    body: JSON.stringify({ plan })
+                });
+                const body = await res.json();
+                if (!res.ok) throw new Error(body.detail || 'Activation failed');
+                el.innerHTML = `✓ <strong>${body.plan.toUpperCase()}</strong> activated — your key is unchanged and now valid through ${body.expires} (${body.seats} seats, ${body.apps} apps).`;
+                el.className = 'text-sm text-green-600 mt-2';
+            } catch (e) {
+                el.textContent = `⚠ ${e.message}`;
+                el.className = 'text-sm text-red-500 mt-2';
+            }
+        }
+
+        // ─── Rails Toggles (Step 2) ───────────────────────────────────────────────
+        function buildToggles() {
+            const container = document.getElementById('rails-toggles');
+            container.innerHTML = rails.map(r => `
+        <div class="flex items-center justify-between py-3 border-b border-border last:border-0">
+          <div>
+            <p class="text-sm font-semibold text-ink">${r.label}</p>
+            <p class="text-xs text-muted">${r.desc}</p>
+          </div>
+          <label class="toggle-switch ml-4 shrink-0">
+            <input type="checkbox" ${state.rails[r.id] ? 'checked' : ''}
+              onchange="state.rails['${r.id}'] = this.checked">
+            <span class="toggle-track"><span class="toggle-thumb"></span></span>
+          </label>
+        </div>
+      `).join('');
+        }
+
+        // ─── LLM Fields (Step 3) ─────────────────────────────────────────────────
+        function updateLLMFields() {
+            const type = document.getElementById('llm-type').value;
+            const models = { mock: '', openai: 'gpt-4o-mini', anthropic: 'claude-3-5-sonnet-20241022', ollama: 'llama3', openai_compatible: 'meta-llama/Llama-3-8b-chat-hf' };
+            const envVars = { openai: 'OPENAI_API_KEY', anthropic: 'ANTHROPIC_API_KEY', openai_compatible: 'TOGETHER_API_KEY' };
+            const needsUrl = ['ollama', 'openai_compatible'];
+            const needsKey = ['openai', 'anthropic', 'openai_compatible'];
+
+            document.getElementById('llm-model').value = models[type] || '';
+            document.getElementById('llm-model-group').classList.toggle('hidden', type === 'mock');
+            document.getElementById('llm-url-group').classList.toggle('hidden', !needsUrl.includes(type));
+            document.getElementById('llm-key-group').classList.toggle('hidden', !needsKey.includes(type));
+            if (envVars[type]) document.getElementById('llm-env-var').value = envVars[type];
+
+            if (type === 'ollama') {
+                document.getElementById('llm-url').value = 'http://localhost:11434';
+                document.getElementById('llm-url').placeholder = 'http://localhost:11434';
+            } else if (type === 'openai_compatible') {
+                document.getElementById('llm-url').placeholder = 'https://api.together.xyz/v1/chat/completions';
+            }
+        }
+
+        // ─── License Key Parsing (Step 4) ────────────────────────────────────────
+        function validateLicenseKey(key) {
+            const statusEl = document.getElementById('license-status');
+            const infoEl = document.getElementById('license-info');
+
+            if (!key) { statusEl.innerHTML = ''; infoEl.classList.add('hidden'); return; }
+            if (!key.startsWith('GUARDRAIL-')) {
+                statusEl.innerHTML = `<span class="text-xs text-red-500 font-medium">⚠ Key must start with GUARDRAIL-</span>`;
+                infoEl.classList.add('hidden'); return;
+            }
+
+            try {
+                const body = key.slice('GUARDRAIL-'.length);
+                const [payloadB64] = body.split('.');
+                const padded = payloadB64 + '='.repeat((4 - payloadB64.length % 4) % 4);
+                const payload = JSON.parse(atob(padded.replace(/-/g, '+').replace(/_/g, '/')));
+
+                const expires = new Date(payload.expires);
+                const now = new Date();
+                if (expires < now) {
+                    statusEl.innerHTML = `<span class="text-xs text-red-500 font-medium">⚠ License key expired on ${expires.toLocaleDateString()}</span>`;
+                    infoEl.classList.add('hidden'); return;
+                }
+
+                const daysLeft = Math.ceil((expires - now) / 86400000);
+                statusEl.innerHTML = `<span class="text-xs text-green-600 font-medium">✓ Valid license — ${daysLeft} days remaining</span>`;
+                state.licensePayload = payload;
+
+                document.getElementById('lic-tier').textContent = payload.tier.toUpperCase();
+                document.getElementById('lic-seats').textContent = payload.seats + ' seats';
+                document.getElementById('lic-apps').textContent = payload.apps + ' apps';
+                document.getElementById('lic-expires').textContent = expires.toLocaleDateString();
+                infoEl.classList.remove('hidden');
+            } catch (e) {
+                statusEl.innerHTML = `<span class="text-xs text-amber-600 font-medium">⚠ Could not decode key payload (signature validated server-side)</span>`;
+                infoEl.classList.add('hidden');
+            }
+        }
+
+        // ─── YAML Generation (Step 5) ────────────────────────────────────────────
+        function buildYAML() {
+            const name = document.getElementById('project-name').value || 'My Guardrail Project';
+            const mode = document.getElementById('deployment-mode').value;
+            const ind = document.getElementById('industry').value;
+            const llmType = document.getElementById('llm-type').value;
+            const model = document.getElementById('llm-model').value;
+            const url = document.getElementById('llm-url').value;
+            const envVar = document.getElementById('llm-env-var').value || 'OPENAI_API_KEY';
+            const sysProm = document.getElementById('llm-system-prompt').value;
+            const licKey = document.getElementById('license-key').value;
+            const r = state.rails;
+
+            return `# guard_config.yaml
+# Generated by Universal Guardrail Setup Wizard
+# ${new Date().toISOString()}
+
+global:
+  project_name: "${name}"
+  active_industry: ${ind}
+  deployment_mode: ${mode}
+  audit_log_path: logs/compliance_audit.jsonl
+
+security_rails:
+  jailbreak_detection:
+    enabled: ${r.jailbreak}
+    blocked_phrases:
+      - "dan mode"
+      - "do anything now"
+      - "disable safety"
+  system_prompt_protection:
+    enabled: true
+    blocked_phrases:
+      - "ignore previous instructions"
+      - "system override"
+      - "reveal system prompt"
+
+semantic_rails:
+  enabled: ${r.semantic}
+  model: all-MiniLM-L6-v2
+  similarity_threshold: 0.45
+  banned_topics:
+    - hack
+    - exploit
+    - attack
+    - bypass firewall
+    - steal credentials
+
+input_rails:
+  pii_redaction:
+    enabled: ${r.pii}
+    normalize_text: true
+    patterns:
+      email: "[\\w\\.-]+@[\\w\\.-]+"
+      phone: "\\d{3}-\\d{3}-\\d{4}"
+
+input_rails_advanced:
+  gibberish:
+    enabled: true
+    entropy_threshold: 5.5
+  invisible_text:
+    enabled: true
+  obfuscation:
+    enabled: ${r.obfuscation}
+    threshold: 0.8
+
+content_rails:
+  financial_advice:
+    enabled: ${(ind === 'finance' || ind === 'general')}
+  medical_advice:
+    enabled: ${(ind === 'healthcare' || ind === 'general')}
+  competitors:
+    enabled: false
+    banned_brands: []
+
+output_rails:
+  insecure_code_detection:
+    enabled: ${r.malcode}
+    block_patterns:
+      - "eval("
+      - "exec("
+      - "os.system("
+      - "subprocess.call"
+
+output_rails_advanced:
+  code_secrets:
+    enabled: ${r.secrets}
+  hallucination_check:
+    enabled: ${r.hallucination}
+    confidence_threshold: 0.7
+
+multi_modal_advanced:
+  image_nsfw:
+    enabled: ${r.nsfw}
+  image_ocr:
+    enabled: true
+  audio_deepfake:
+    enabled: false
+    block_on_detection: false
+
+rbac:
+  enabled: true
+  roles:
+    intern:
+      allow_finance: false
+    executive:
+      allow_finance: true
+
+canary:
+  enabled: true
+  token_prefix: INTERNAL_ID_
+
+circuit_breaker:
+  fail_max: 3
+  reset_timeout: 30
+
+infrastructure:
+  rate_limit:
+    enabled: ${r.rateLimit}
+    max_requests: 50
+    window_seconds: 60
+  caching:
+    enabled: true
+    ttl_seconds: 3600
+
+upstream_llm:
+  type: ${llmType}
+  model_name: "${model}"${url ? `\n  api_url: "${url}"` : ''}
+  api_key_env_var: "${envVar}"
+  api_key_direct: ""
+  system_prompt: "${sysProm.replace(/"/g, '\\"')}"
+
+# License key (set via GUARDRAIL_API_KEYS env var in production)
+# ${licKey ? licKey.slice(0, 30) + '...' : '(not set — configure via environment variable)'}
+`;
+        }
+
+        let currentYAML = '';
+
+        function renderYAML() {
+            currentYAML = buildYAML();
+            document.getElementById('yaml-preview').textContent = currentYAML;
+        }
+
+        function downloadConfig() {
+            const blob = new Blob([currentYAML], { type: 'text/yaml' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'guard_config.yaml';
+            a.click();
+            URL.revokeObjectURL(a.href);
+        }
+
+        function copyConfig() {
+            navigator.clipboard.writeText(currentYAML).then(() => {
+                const btn = document.getElementById('copy-btn');
+                btn.textContent = '✓ Copied!';
+                setTimeout(() => btn.innerHTML = `<svg class="w-4 h-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/> </svg> Copy`, 2000);
+            });
+        }
+
+        // ─── Init ─────────────────────────────────────────────────────────────────
+        buildToggles();
+        updateLLMFields();
+    </script>
+</body>
+
+</html>

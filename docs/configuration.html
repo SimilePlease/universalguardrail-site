@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuration Reference — Universal Guardrail Docs</title>
+    <meta name="description"
+        content="Complete guide to configuring Universal Guardrail via guard_config.yaml. Explore security rails, semantic matching, and more.">
+
+    <!-- SEO -->
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="canonical" href="https://universalguardrail.io/docs/configuration.html">
+    <meta property="og:title" content="Configuration Reference | Universal Guardrail Docs">
+    <meta property="og:description"
+        content="Every configuration key and security rail in Universal Guardrail documented in detail.">
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
+    </script>
+
+    <link rel="icon" type="image/png" href="../assets/favicon_v7_final.png">
+    <link rel="icon" type="image/x-icon" href="../assets/favicon.ico" sizes="16x16 32x32 48x48">
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: { inkSpace: '#111827', inkMuted: '#4B5563', accentBlue: '#2563EB' }
+                }
+            }
+        }
+    </script>
+    <style>
+        pre {
+            background: #0f172a;
+            color: #e2e8f0;
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            overflow-x: auto;
+            font-size: 0.875rem;
+            line-height: 1.7;
+        }
+
+        code:not(pre code) {
+            background: #f1f5f9;
+            color: #0f172a;
+            border-radius: 4px;
+            padding: 1px 6px;
+            font-size: 0.85em;
+        }
+
+        .sidebar-link {
+            display: block;
+            padding: 0.4rem 0.75rem;
+            border-radius: 6px;
+            color: #4B5563;
+            font-size: 0.875rem;
+            transition: all 0.15s;
+        }
+
+        .sidebar-link:hover,
+        .sidebar-link.active {
+            background: #eff6ff;
+            color: #2563EB;
+            font-weight: 600;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            margin-top: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        th {
+            background: #f8fafc;
+            text-align: left;
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+            color: #111827;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        td {
+            padding: 0.5rem 1rem;
+            border-top: 1px solid #f1f5f9;
+            color: #4B5563;
+            vertical-align: top;
+        }
+
+        td:first-child {
+            font-family: monospace;
+            color: #111827;
+            white-space: nowrap;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #111827;
+            margin-top: 3rem;
+            margin-bottom: 0.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid #f1f5f9;
+        }
+
+        h2:first-of-type {
+            border-top: none;
+            margin-top: 0;
+        }
+
+        p {
+            color: #4B5563;
+            line-height: 1.7;
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .default-badge {
+            font-size: 0.7rem;
+            background: #f1f5f9;
+            color: #374151;
+            padding: 1px 6px;
+            border-radius: 4px;
+            margin-left: 4px;
+        }
+
+        .tier-badge {
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 1px 6px;
+            border-radius: 4px;
+        }
+
+        .tier-dev {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .tier-biz {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .tier-ent {
+            background: #f3e8ff;
+            color: #6b21a8;
+        }
+    </style>
+</head>
+
+<body class="bg-white font-sans text-inkSpace antialiased">
+
+    <nav class="fixed w-full top-0 bg-white/90 backdrop-blur-md z-50 border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+            <a class="block h-20 flex items-center" href="../index.html" >
+                <img src="../assets/logo_v7_final.svg" alt="Universal Guardrail" style="height:48px;width:auto;"></a>
+            <div class="hidden md:flex items-center gap-8 text-sm font-semibold text-inkMuted">
+                <a href="index.html" class="hover:text-inkSpace transition-colors">Docs</a>
+                <a href="api-reference.html" class="hover:text-inkSpace transition-colors">API Reference</a>
+                <a href="configuration.html" class="text-accentBlue">Configuration</a>
+                </div>
+            <a href="../index.html"
+                class="hidden md:inline-flex items-center bg-gray-900 text-white text-sm font-bold px-5 py-2 rounded-full hover:bg-black transition-colors">←
+                Back to Site</a>
+        </div>
+    </nav>
+
+    <div class="pt-16 flex min-h-screen">
+        <aside
+            class="hidden lg:block w-64 fixed top-16 left-0 h-full border-r border-gray-100 bg-white overflow-y-auto py-8 px-4">
+            <div class="mb-6">
+                <p class="text-xs font-bold uppercase tracking-wider text-gray-400 px-3 mb-2">Getting Started</p>
+                <a href="index.html" class="sidebar-link">Quickstart</a>
+                <a href="configuration.html" class="sidebar-link active">Configuration</a>
+                <a href="api-reference.html" class="sidebar-link">API Reference</a>
+            </div>
+            <div class="mb-6">
+                <p class="text-xs font-bold uppercase tracking-wider text-gray-400 px-3 mb-2">Config Sections</p>
+                <a href="#global" class="sidebar-link">global</a>
+                <a href="#security-rails" class="sidebar-link">security_rails</a>
+                <a href="#input-rails" class="sidebar-link">input_rails</a>
+                <a href="#input-rails-advanced" class="sidebar-link">input_rails_advanced</a>
+                <a href="#semantic-rails" class="sidebar-link">semantic_rails</a>
+                <a href="#output-rails" class="sidebar-link">output_rails</a>
+                <a href="#content-rails" class="sidebar-link">content_rails</a>
+                <a href="#rbac" class="sidebar-link">rbac</a>
+                <a href="#multi-modal" class="sidebar-link">multi_modal</a>
+                <a href="#canary" class="sidebar-link">canary</a>
+            </div>
+            <div>
+                <p class="text-xs font-bold uppercase tracking-wider text-gray-400 px-3 mb-2">Legal</p>
+                 <a href="../purchase.html" class="sidebar-link">Get API Key</a> · <a href="../legal/terms.html" class="sidebar-link">Terms of Service</a>
+                <a href="../legal/privacy.html" class="sidebar-link">Privacy Policy</a>
+                <a href="../legal/dpa.html" class="sidebar-link">DPA</a>
+            </div>
+        </aside>
+
+        <main class="lg:ml-64 flex-1 max-w-3xl mx-auto px-6 py-12">
+            <div class="mb-2 text-sm text-accentBlue font-semibold">Reference</div>
+            <h1 class="text-4xl font-extrabold text-inkSpace mb-4">Configuration Reference</h1>
+            <p class="text-lg text-inkMuted mb-3">Complete reference for every key in <code>guard_config.yaml</code>.
+                The file is hot-reloaded via <code>POST /api/config</code> — no restart needed.</p>
+            <div class="flex gap-2 text-xs mb-10">
+                <span class="tier-badge tier-dev">Dev</span> Developer tier &nbsp;
+                <span class="tier-badge tier-biz">Biz</span> Business tier &nbsp;
+                <span class="tier-badge tier-ent">Ent</span> Enterprise tier
+            </div>
+
+            <!-- global -->
+            <h2 id="global">global</h2>
+            <p>Top-level system configuration.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Key</th>
+                        <th>Type</th>
+                        <th>Default</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>active_industry</td>
+                        <td>string</td>
+                        <td><code>general</code></td>
+                        <td>Sets context for industry-specific rails. Options: <code>finance</code>,
+                            <code>healthcare</code>, <code>general</code>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>deployment_mode</td>
+                        <td>string</td>
+                        <td><code>active</code></td>
+                        <td><code>active</code> blocks threats. <code>passive</code> logs only — useful for tuning
+                            before go-live.</td>
+                    </tr>
+                    <tr>
+                        <td>audit_log_path</td>
+                        <td>string</td>
+                        <td><code>logs/compliance_audit.jsonl</code></td>
+                        <td>Path to the JSONL audit log file. Mount as Docker volume to persist.</td>
+                    </tr>
+                    <tr>
+                        <td>project_name</td>
+                        <td>string</td>
+                        <td>—</td>
+                        <td>Display name shown in dashboard and logs.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- security_rails -->
+            <h2 id="security-rails">security_rails</h2>
+            <p>Core keyword-based protection against prompt injection and jailbreaks. Available on all tiers.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Key</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>system_prompt_protection.enabled</td>
+                        <td>bool</td>
+                        <td>Blocks phrases that attempt to extract or override the system prompt</td>
+                    </tr>
+                    <tr>
+                        <td>system_prompt_protection.blocked_phrases</td>
+                        <td>list</td>
+                        <td>Default:
+                            <code>["ignore previous instructions", "system override", "reveal system prompt"]</code>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>jailbreak_detection.enabled</td>
+                        <td>bool</td>
+                        <td>Blocks known jailbreak patterns</td>
+                    </tr>
+                    <tr>
+                        <td>jailbreak_detection.blocked_phrases</td>
+                        <td>list</td>
+                        <td>Default: <code>["dan mode", "do anything now", "disable safety"]</code>. Add your own.</td>
+                    </tr>
+                </tbody>
+            </table>
+            <pre>
+security_rails:
+  system_prompt_protection:
+    enabled: true
+    blocked_phrases:
+      - ignore previous instructions
+      - reveal system prompt
+  jailbreak_detection:
+    enabled: true
+    blocked_phrases:
+      - dan mode
+      - do anything now</pre>
+
+            <!-- input_rails -->
+            <h2 id="input-rails">input_rails</h2>
+            <p>Core input processing — PII redaction and industry-specific keyword rules.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Key</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>pii_redaction.enabled</td>
+                        <td>bool</td>
+                        <td>Automatically redacts email, phone, credit card, and SSN patterns from prompts before
+                            sending to LLM</td>
+                    </tr>
+                    <tr>
+                        <td>pii_redaction.normalize_text</td>
+                        <td>bool</td>
+                        <td>Normalises unicode before redaction</td>
+                    </tr>
+                    <tr>
+                        <td>industry_rules.finance.restricted_keywords</td>
+                        <td>list</td>
+                        <td>Keywords that trigger a compliance block for finance-regulated roles</td>
+                    </tr>
+                    <tr>
+                        <td>industry_rules.finance.canned_response</td>
+                        <td>string</td>
+                        <td>Message returned when a finance rule fires</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- input_rails_advanced -->
+            <h2 id="input-rails-advanced">input_rails_advanced <span class="tier-badge tier-biz">Biz</span></h2>
+            <p>Advanced evasion detection for obfuscation and encoding attacks.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Key</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>invisible_text.enabled</td>
+                        <td>bool</td>
+                        <td>Detects zero-width characters (U+200B etc.) used to hide injections</td>
+                    </tr>
+                    <tr>
+                        <td>obfuscation.enabled</td>
+                        <td>bool</td>
+                        <td>Detects Base64-encoded payloads in prompts</td>
+                    </tr>
+                    <tr>
+                        <td>gibberish.enabled</td>
+                        <td>bool</td>
+                        <td>Blocks high-entropy strings (fuzzing / DoS attempts)</td>
+                    </tr>
+                    <tr>
+                        <td>gibberish.entropy_threshold</td>
+                        <td>float</td>
+                        <td>Default: <code>5.5</code>. Shannon entropy limit. Higher = more permissive.</td>
+                    </tr>
+                    <tr>
+                        <td>language_enforcement.enabled</td>
+                        <td>bool</td>
+                        <td>Restricts input to ASCII-dominant languages to prevent polyglot attacks</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- semantic_rails -->
+            <h2 id="semantic-rails">semantic_rails <span class="tier-badge tier-biz">Biz</span></h2>
+            <p>Vector-similarity matching against banned topics using a local <code>all-MiniLM-L6-v2</code> model
+                running on CPU. No external API calls.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Key</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>enabled</td>
+                        <td>bool</td>
+                        <td>Enables semantic matching engine</td>
+                    </tr>
+                    <tr>
+                        <td>banned_topics</td>
+                        <td>list</td>
+                        <td>Natural language phrases. Any prompt semantically similar to these is blocked.</td>
+                    </tr>
+                    <tr>
+                        <td>similarity_threshold</td>
+                        <td>float</td>
+                        <td>Cosine similarity cutoff (0.0–1.0). Default: <code>0.45</code>. Lower = stricter.</td>
+                    </tr>
+                    <tr>
+                        <td>model</td>
+                        <td>string</td>
+                        <td>Default: <code>all-MiniLM-L6-v2</code>. Model is cached after first load.</td>
+                    </tr>
+                </tbody>
+            </table>
+            <pre>
+semantic_rails:
+  enabled: true
+  similarity_threshold: 0.45
+  banned_topics:
+    - hack
+    - exploit
+    - steal credentials
+    - bypass firewall
+    - exfiltrate data</pre>
+
+            <!-- output_rails -->
+            <h2 id="output-rails">output_rails <span class="tier-badge tier-biz">Biz</span></h2>
+            <p>Validates LLM responses before they reach your users.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Key</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>insecure_code_detection.enabled</td>
+                        <td>bool</td>
+                        <td>Blocks LLM responses containing dangerous function calls</td>
+                    </tr>
+                    <tr>
+                        <td>insecure_code_detection.block_patterns</td>
+                        <td>list</td>
+                        <td>Default: <code>["eval(", "exec(", "os.system(", "subprocess.call"]</code></td>
+                    </tr>
+                    <tr>
+                        <td>max_retries</td>
+                        <td>int</td>
+                        <td>Times to re-prompt the LLM if output is blocked. Default: <code>2</code></td>
+                    </tr>
+                    <tr>
+                        <td>output_rails_advanced.code_secrets.enabled</td>
+                        <td>bool</td>
+                        <td>Scans LLM output for leaked API keys and secrets</td>
+                    </tr>
+                    <tr>
+                        <td>output_rails_advanced.hallucination_check.enabled</td>
+                        <td>bool</td>
+                        <td>Flags responses with low semantic consistency vs. the original prompt</td>
+                    </tr>
+                    <tr>
+                        <td>output_rails_advanced.hallucination_check.confidence_threshold</td>
+                        <td>float</td>
+                        <td>Default: <code>0.7</code>. Responses below this cosine similarity score are flagged.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- content_rails -->
+            <h2 id="content-rails">content_rails</h2>
+            <p>Business-policy content controls.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Key</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>financial_advice.enabled</td>
+                        <td>bool</td>
+                        <td>Blocks prompts requesting stock picks or investment advice</td>
+                    </tr>
+                    <tr>
+                        <td>medical_advice.enabled</td>
+                        <td>bool</td>
+                        <td>Blocks prompts requesting diagnosis or prescription advice</td>
+                    </tr>
+                    <tr>
+                        <td>competitors.enabled</td>
+                        <td>bool</td>
+                        <td>Blocks mentions of specified competitor brand names</td>
+                    </tr>
+                    <tr>
+                        <td>competitors.banned_brands</td>
+                        <td>list</td>
+                        <td>List of competitor brand names to block</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- rbac -->
+            <h2 id="rbac">rbac <span class="tier-badge tier-biz">Biz</span></h2>
+            <p>Role-based access control. Roles are passed as the <code>role</code> field in API requests.</p>
+            <pre>
+rbac:
+  enabled: true
+  roles:
+    executive:
+      allow_finance: true
+    user:
+      allow_finance: false
+    intern:
+      allow_finance: false</pre>
+
+            <!-- multi_modal -->
+            <h2 id="multi-modal">multi_modal <span class="tier-badge tier-biz">Biz</span></h2>
+            <p>Controls for image, audio, and video scanning via <code>POST /api/upload</code>.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Key</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>image.scan_exif</td>
+                        <td>bool</td>
+                        <td>Blocks images containing GPS metadata (privacy risk)</td>
+                    </tr>
+                    <tr>
+                        <td>multi_modal_advanced.image_nsfw.enabled</td>
+                        <td>bool</td>
+                        <td>Skin-tone heuristic NSFW detection on uploaded images</td>
+                    </tr>
+                    <tr>
+                        <td>multi_modal_advanced.image_ocr.enabled</td>
+                        <td>bool</td>
+                        <td>OCR text extraction from images — scanned through all text rails</td>
+                    </tr>
+                    <tr>
+                        <td>multi_modal_advanced.audio_deepfake.enabled</td>
+                        <td>bool</td>
+                        <td>Spectral analysis to detect AI-cloned/synthetic voices</td>
+                    </tr>
+                    <tr>
+                        <td>multi_modal_advanced.audio_deepfake.block_on_detection</td>
+                        <td>bool</td>
+                        <td>If <code>true</code>, blocks audio when deepfake is suspected. If <code>false</code>, flags
+                            only.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- canary -->
+            <h2 id="canary">canary</h2>
+            <p>Canary token injection to detect system prompt leakage in LLM outputs.</p>
+            <pre>
+canary:
+  enabled: true
+  token_prefix: INTERNAL_ID_
+# A unique token is injected into each session's system prompt.
+# If the LLM echoes it back in a response, a CRITICAL alert fires
+# and the response is blocked immediately.</pre>
+
+            <div class="border-t border-gray-100 pt-8 flex gap-4">
+                <a href="api-reference.html"
+                    class="inline-flex items-center gap-2 border border-gray-200 text-inkSpace text-sm font-bold px-5 py-2.5 rounded-full hover:bg-gray-50 transition-colors">←
+                    API Reference</a>
+                <a href="index.html"
+                    class="inline-flex items-center gap-2 bg-accentBlue text-white text-sm font-bold px-5 py-2.5 rounded-full hover:bg-blue-700 transition-colors">Back
+                    to Quickstart</a>
+            </div>
+        </main>
+    </div>
+
+    <footer class="text-center py-8 border-t border-gray-100 text-inkMuted text-xs ml-0 lg:ml-64">
+        Universal Guardrail &copy; 2026 &nbsp;·&nbsp;
+        <a href="../legal/terms.html" class="hover:underline">Terms</a> &nbsp;·&nbsp;
+        <a href="../legal/privacy.html" class="hover:underline">Privacy</a> &nbsp;·&nbsp;
+        <a href="../legal/dpa.html" class="hover:underline">DPA</a>
+    </footer>
+</body>
+
+</html>

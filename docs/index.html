@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quickstart — Universal Guardrail Docs</title>
+    <meta name="description"
+        content="Deploy Universal Guardrail on your infrastructure in under 5 minutes. Official installation and integration guide.">
+
+    <!-- SEO -->
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="canonical" href="https://universalguardrail.io/docs/index.html">
+    <meta property="og:title" content="Quickstart | Universal Guardrail Docs">
+    <meta property="og:description"
+        content="Step-by-step guide to installing and integrating Universal Guardrail for enterprise AI security.">
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
+    </script>
+
+    <link rel="icon" type="image/png" href="../assets/favicon_v7_final.png">
+    <link rel="icon" type="image/x-icon" href="../assets/favicon.ico" sizes="16x16 32x32 48x48">
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        inkSpace: '#111827', inkMuted: '#4B5563',
+                        accentBlue: '#2563EB', borderLight: '#E5E7EB',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        pre {
+            background: #0f172a;
+            color: #e2e8f0;
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            overflow-x: auto;
+            font-size: 0.875rem;
+            line-height: 1.7;
+        }
+
+        code:not(pre code) {
+            background: #f1f5f9;
+            color: #0f172a;
+            border-radius: 4px;
+            padding: 1px 6px;
+            font-size: 0.85em;
+        }
+
+        .sidebar-link {
+            display: block;
+            padding: 0.4rem 0.75rem;
+            border-radius: 6px;
+            color: #4B5563;
+            font-size: 0.875rem;
+            transition: all 0.15s;
+        }
+
+        .sidebar-link:hover,
+        .sidebar-link.active {
+            background: #eff6ff;
+            color: #2563EB;
+            font-weight: 600;
+        }
+
+        .step-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #2563EB;
+            color: white;
+            font-weight: 700;
+            font-size: 0.875rem;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+
+<body class="bg-white font-sans text-inkSpace antialiased">
+
+    <!-- Nav -->
+    <nav class="fixed w-full top-0 bg-white/90 backdrop-blur-md z-50 border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+            <a class="block h-20 flex items-center" href="../index.html" >
+                <img src="../assets/logo_v7_final.svg" alt="Universal Guardrail" style="height:48px;width:auto;"></a>
+            <div class="hidden md:flex items-center gap-8 text-sm font-semibold text-inkMuted">
+                <a href="index.html" class="text-accentBlue">Docs</a>
+                <a href="api-reference.html" class="hover:text-inkSpace transition-colors">API Reference</a>
+                <a href="configuration.html" class="hover:text-inkSpace transition-colors">Configuration</a>
+                </div>
+            <a href="../index.html"
+                class="hidden md:inline-flex items-center gap-2 bg-gray-900 text-white text-sm font-bold px-5 py-2 rounded-full hover:bg-black transition-colors">←
+                Back to Site</a>
+        </div>
+    </nav>
+
+    <div class="pt-16 flex min-h-screen">
+        <!-- Sidebar -->
+        <aside
+            class="hidden lg:block w-64 fixed top-16 left-0 h-full border-r border-gray-100 bg-white overflow-y-auto py-8 px-4">
+            <div class="mb-6">
+                <p class="text-xs font-bold uppercase tracking-wider text-gray-400 px-3 mb-2">Getting Started</p>
+                <a href="index.html" class="sidebar-link active">Quickstart</a>
+                <a href="configuration.html" class="sidebar-link">Configuration</a>
+                <a href="api-reference.html" class="sidebar-link">API Reference</a>
+            </div>
+            <div class="mb-6">
+                <p class="text-xs font-bold uppercase tracking-wider text-gray-400 px-3 mb-2">Guides</p>
+                <a href="#step1" class="sidebar-link">1. Install</a>
+                <a href="#step2" class="sidebar-link">2. Configure</a>
+                <a href="#step3" class="sidebar-link">3. Integrate</a>
+                <a href="#step4" class="sidebar-link">4. Monitor</a>
+            </div>
+            <div>
+                <p class="text-xs font-bold uppercase tracking-wider text-gray-400 px-3 mb-2">Legal</p>
+                 <a href="../purchase.html" class="sidebar-link">Get API Key</a> · <a href="../legal/terms.html" class="sidebar-link">Terms of Service</a>
+                <a href="../legal/privacy.html" class="sidebar-link">Privacy Policy</a>
+                <a href="../legal/dpa.html" class="sidebar-link">DPA</a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="lg:ml-64 flex-1 max-w-3xl mx-auto px-6 py-12">
+
+            <div class="mb-2 text-sm text-accentBlue font-semibold">Getting Started</div>
+            <h1 class="text-4xl font-extrabold text-inkSpace mb-4">Quickstart</h1>
+            <p class="text-lg text-inkMuted mb-10">Deploy Universal Guardrail on your infrastructure in under 5 minutes.
+            </p>
+
+            <div class="bg-blue-50 border border-blue-100 rounded-2xl p-5 mb-10 flex gap-4">
+                <span class="text-2xl">🔒</span>
+                <div>
+                    <p class="font-bold text-inkSpace mb-1">Data stays on your infra</p>
+                    <p class="text-sm text-inkMuted">Universal Guardrail runs entirely within your environment. No
+                        prompt data, user inputs, or audit logs are ever sent to our servers.</p>
+                </div>
+            </div>
+
+            <!-- Prerequisites -->
+            <h2 class="text-2xl font-bold text-inkSpace mb-4">Prerequisites</h2>
+            <ul class="text-inkMuted text-sm space-y-2 mb-10 list-none">
+                <li class="flex items-center gap-2"><span class="text-green-500">✓</span> Docker Engine 20.10+</li>
+                <li class="flex items-center gap-2"><span class="text-green-500">✓</span> Docker Compose v2+</li>
+                <li class="flex items-center gap-2"><span class="text-green-500">✓</span> 2 vCPU / 4 GB RAM minimum (8
+                    GB recommended for semantic model)</li>
+                <li class="flex items-center gap-2"><span class="text-green-500">✓</span> Your Universal Guardrail
+                    license key (set as env var)</li>
+            </ul>
+
+            <!-- Step 1 -->
+            <div id="step1" class="mb-12">
+                <div class="flex items-center gap-4 mb-4">
+                    <span class="step-num">1</span>
+                    <h2 class="text-2xl font-bold text-inkSpace">Install</h2>
+                </div>
+                <p class="text-inkMuted mb-4">Pull the Docker image using your license key and start the stack.</p>
+                <pre>
+# Pull the latest image (requires your license key as registry token)
+docker login ghcr.io -u LICENSE -p YOUR_LICENSE_KEY
+docker pull ghcr.io/universal-guardrail/guardrail:latest
+
+# Or clone for self-build:
+git clone https://github.com/SimilePlease/UniversalGuardRail.git
+cd universal-guardrail</pre>
+                <pre class="mt-3">
+# Start the full stack (API + Dashboard)
+GUARDRAIL_API_KEYS=your-api-key docker-compose up -d</pre>
+                <p class="text-sm text-inkMuted mt-3">The guardrail API will be available at
+                    <code>http://localhost:8000</code> and the SOC dashboard at <code>http://localhost:5173</code>.
+                </p>
+            </div>
+
+            <!-- Step 2 -->
+            <div id="step2" class="mb-12">
+                <div class="flex items-center gap-4 mb-4">
+                    <span class="step-num">2</span>
+                    <h2 class="text-2xl font-bold text-inkSpace">Configure</h2>
+                </div>
+                <p class="text-inkMuted mb-4">Edit <code>guard_config.yaml</code> to match your use case. The container
+                    hot-reloads config changes without restart.</p>
+                <pre>
+# guard_config.yaml — minimal production config
+global:
+  active_industry: finance   # finance | healthcare | general
+  deployment_mode: active    # active | passive (log-only)
+  audit_log_path: logs/compliance_audit.jsonl
+
+rbac:
+  enabled: true
+  roles:
+    admin:
+      allow_finance: true
+    user:
+      allow_finance: false
+
+semantic_rails:
+  enabled: true
+  banned_topics:
+    - hack
+    - exploit credentials
+    - bypass firewall
+  similarity_threshold: 0.45  # 0.0–1.0. Lower = stricter.
+
+input_rails:
+  pii_redaction:
+    enabled: true             # Redacts email, phone, CC, SSN</pre>
+                <p class="text-sm text-inkMuted mt-3">See the full <a href="configuration.html"
+                        class="text-accentBlue underline">Configuration Reference</a> for every option.</p>
+            </div>
+
+            <!-- Step 3 -->
+            <div id="step3" class="mb-12">
+                <div class="flex items-center gap-4 mb-4">
+                    <span class="step-num">3</span>
+                    <h2 class="text-2xl font-bold text-inkSpace">Integrate</h2>
+                </div>
+                <p class="text-inkMuted mb-4">Route your existing AI application through the guardrail API. Works as a
+                    drop-in proxy — no SDK required.</p>
+
+                <div class="flex gap-3 mb-3 text-sm font-semibold border-b border-gray-100 pb-2">
+                    <span class="text-accentBlue">Python</span>
+                    <span class="text-inkMuted">JavaScript</span>
+                    <span class="text-inkMuted">cURL</span>
+                </div>
+
+                <pre>
+import requests
+
+GUARDRAIL_URL = "http://localhost:8000"
+API_KEY = "your-api-key"
+
+def safe_llm_call(user_prompt: str, user_role: str = "user"):
+    """Drop-in wrapper that validates before and after LLM call."""
+    response = requests.post(
+        f"{GUARDRAIL_URL}/api/chat",
+        json={
+            "prompt": user_prompt,
+            "role": user_role,    # Maps to your RBAC roles
+            "history": []
+        },
+        headers={"x-api-key": API_KEY}
+    )
+    result = response.json()
+
+    if not result["allowed"]:
+        # Guardrail blocked — return the safe response
+        return result["response"]
+
+    return result["response"]  # LLM response, validated
+
+# Usage — identical to calling OpenAI directly
+reply = safe_llm_call("Explain our refund policy", "user")</pre>
+
+                <div class="mt-6 bg-gray-50 rounded-2xl p-5 text-sm text-inkMuted">
+                    <p class="font-semibold text-inkSpace mb-2">What happens under the hood:</p>
+                    <ol class="list-decimal list-inside space-y-1">
+                        <li>Your prompt is validated through <strong>Input Rails</strong> (injection, PII, semantic,
+                            RBAC)</li>
+                        <li>If allowed, it's forwarded to your configured upstream LLM</li>
+                        <li>The LLM response is validated through <strong>Output Rails</strong> (hallucination, code
+                            safety, canary leak)</li>
+                        <li>The clean response is returned to your app — all events logged to SQLite</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Step 4 -->
+            <div id="step4" class="mb-12">
+                <div class="flex items-center gap-4 mb-4">
+                    <span class="step-num">4</span>
+                    <h2 class="text-2xl font-bold text-inkSpace">Monitor</h2>
+                </div>
+                <p class="text-inkMuted mb-4">Open the SOC Dashboard to view real-time threat telemetry.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="border border-gray-100 rounded-2xl p-5">
+                        <p class="font-bold text-inkSpace mb-1">SOC Dashboard</p>
+                        <p class="text-sm text-inkMuted mb-2">Real-time WebSocket threat feed, block rate charts, top
+                            offenders.</p>
+                        <code>http://localhost:5173</code>
+                    </div>
+                    <div class="border border-gray-100 rounded-2xl p-5">
+                        <p class="font-bold text-inkSpace mb-1">Analytics API</p>
+                        <p class="text-sm text-inkMuted mb-2">JSON endpoint for 24h threat summary, cost savings, trend
+                            data.</p>
+                        <code>GET /api/analytics</code>
+                    </div>
+                </div>
+                <pre class="mt-4">
+# Pull 24h analytics snapshot
+curl -H "x-api-key: your-api-key" \
+     http://localhost:8000/api/analytics
+
+# Example response:
+# { "allowed": 1823, "blocked": 47, "flagged": 12,
+#   "avg_latency_ms": 38.4, "cost_saved_usd": 0.021 }</pre>
+            </div>
+
+            <div class="border-t border-gray-100 pt-8 flex gap-4">
+                <a href="api-reference.html"
+                    class="inline-flex items-center gap-2 bg-accentBlue text-white text-sm font-bold px-5 py-2.5 rounded-full hover:bg-blue-700 transition-colors">API
+                    Reference →</a>
+                <a href="configuration.html"
+                    class="inline-flex items-center gap-2 border border-gray-200 text-inkSpace text-sm font-bold px-5 py-2.5 rounded-full hover:bg-gray-50 transition-colors">Configuration
+                    Reference →</a>
+            </div>
+        </main>
+    </div>
+
+    <footer class="text-center py-8 border-t border-gray-100 text-inkMuted text-xs ml-0 lg:ml-64">
+        Universal Guardrail &copy; 2026 &nbsp;·&nbsp;
+        <a href="../legal/terms.html" class="hover:underline">Terms</a> &nbsp;·&nbsp;
+        <a href="../legal/privacy.html" class="hover:underline">Privacy</a> &nbsp;·&nbsp;
+        <a href="../legal/dpa.html" class="hover:underline">DPA</a>
+    </footer>
+</body>
+
+</html>

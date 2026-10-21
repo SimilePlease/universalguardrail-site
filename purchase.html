@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Get Your API Key — Universal Guardrail</title>
+    <meta name="description" content="Purchase a Universal GuardRail license key — delivered instantly to your email.">
+    <link rel="icon" type="image/png" href="assets/favicon_v7_final.png">
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" sizes="16x16 32x32 48x48">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', system-ui, sans-serif; }
+        .title-mega { font-size: clamp(2.2rem, 4vw, 3.2rem); font-weight: 800; letter-spacing: -0.02em; }
+    </style>
+</head>
+<body class="bg-gray-50 text-inkSpace antialiased">
+    <!-- Minimal Nav -->
+    <nav class="fixed w-full top-0 bg-white/90 backdrop-blur-md z-50 border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="index.html" class="block h-20 flex items-center">
+                <img src="assets/logo_v7_final.svg" alt="Universal Guardrail" style="height:48px;width:auto;">
+            </a>
+            <a href="docs/index.html" class="text-sm font-semibold text-inkMuted hover:text-inkSpace transition-colors">Docs</a>
+        </div>
+    </nav>
+
+    <main class="pt-40 pb-24 px-6 max-w-xl mx-auto">
+        <h1 class="title-mega text-inkSpace mb-4">Get your API key</h1>
+        <p class="text-lg text-inkMuted mb-10">Enter your email, pick a plan, and your license key
+            is delivered to your inbox — ready for your first <code class="text-sm bg-gray-100 px-1.5 py-0.5 rounded">x-api-key</code> request.</p>
+
+        <form id="buyForm" class="bg-white rounded-2xl border border-gray-200 shadow-sm p-8 space-y-6">
+            <div>
+                <label for="email" class="block text-sm font-semibold mb-2">Work email</label>
+                <input id="email" name="email" type="email" required placeholder="you@company.com"
+                       class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
+            </div>
+            <div>
+                <label for="plan" class="block text-sm font-semibold mb-2">Plan</label>
+                <select id="plan" name="plan" class="w-full px-4 py-3 rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500 outline-none">
+                    <option value="starter">Starter — 5 seats, 3 apps</option>
+                    <option value="pro">Pro — 25 seats, 15 apps</option>
+                    <option value="enterprise">Enterprise — 200 seats, 50 apps</option>
+                </select>
+            </div>
+            <button type="submit" id="buyBtn"
+                    class="w-full px-6 py-3.5 rounded-full bg-accentBlue text-white font-semibold hover:bg-blue-700 transition-all hover:scale-[1.02] shadow-sm">
+                Purchase &amp; email my key
+            </button>
+            <p id="msg" class="hidden text-sm rounded-lg px-4 py-3"></p>
+            <p class="text-xs text-gray-400 text-center">Your key is generated, signed, and emailed instantly.
+                We never display it on-screen — email is the secure channel.</p>
+        </form>
+    </main>
+
+    <footer class="border-t border-gray-100 py-10 text-center text-sm text-gray-400">
+        Universal Guardrail © 2026 ·  <a href="purchase.html" class="hover:text-gray-600">Get API Key</a> · <a href="legal/terms.html" class="hover:text-gray-600">Terms</a> ·
+        <a href="legal/privacy.html" class="hover:text-gray-600">Privacy</a>
+    </footer>
+
+    <script>
+        document.getElementById('buyForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('buyBtn'), msg = document.getElementById('msg');
+            btn.disabled = true; btn.textContent = 'Issuing your key…';
+            msg.className = 'hidden';
+            try {
+                const r = await fetch('/api/license/purchase', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: document.getElementById('email').value,
+                        plan: document.getElementById('plan').value,
+                    }),
+                });
+                const body = await r.json();
+                msg.classList.remove('hidden');
+                if (r.ok && body.purchase === 'ok') {
+                    msg.className = 'text-sm rounded-lg px-4 py-3 bg-green-50 text-green-700 border border-green-200';
+                    msg.textContent = body.emailed
+                        ? `✅ Key sent to ${body.sent_to} — check your inbox (and spam folder).`
+                        : `✅ Key issued for ${body.sent_to}. ${body.note}.`;
+                    btn.textContent = 'Purchased ✓';
+                } else {
+                    msg.className = 'text-sm rounded-lg px-4 py-3 bg-red-50 text-red-700 border border-red-200';
+                    msg.textContent = body.detail || body.message || 'Purchase failed — please try again.';
+                    btn.disabled = false; btn.textContent = 'Purchase & email my key';
+                }
+            } catch (err) {
+                msg.classList.remove('hidden');
+                msg.className = 'text-sm rounded-lg px-4 py-3 bg-red-50 text-red-700 border border-red-200';
+                msg.textContent = 'Network error — is the API server running?';
+                btn.disabled = false; btn.textContent = 'Purchase & email my key';
+            }
+        });
+    </script>
+</body>
+</html>
